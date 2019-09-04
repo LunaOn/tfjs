@@ -8,10 +8,10 @@
  * =============================================================================
  */
 
-import {ConstraintSerialization} from '../constraint_config';
-import {InitializerSerialization} from '../initializer_config';
-import {RegularizerSerialization} from '../regularizer_config';
-import {BaseLayerSerialization, LayerConfig} from '../topology_config';
+import { ConstraintSerialization } from '../constraint_config';
+import { InitializerSerialization } from '../initializer_config';
+import { RegularizerSerialization } from '../regularizer_config';
+import { BaseLayerSerialization, LayerConfig } from '../topology_config';
 
 export interface BatchNormalizationLayerConfig extends LayerConfig {
   axis?: number;
@@ -31,13 +31,23 @@ export interface BatchNormalizationLayerConfig extends LayerConfig {
 
 // Update batchNormalizationLayerClassNames below in concert with this.
 export type BatchNormalizationLayerSerialization =
-    BaseLayerSerialization<'BatchNormalization', BatchNormalizationLayerConfig>;
+  BaseLayerSerialization<'BatchNormalization', BatchNormalizationLayerConfig>;
+
+//InstanceNormalization
+export interface InstanceNormalizationLayerConfig extends LayerConfig {
+  activation?: string;
+}
+
+export type InstanceNormalizationLayerSerialization =
+  BaseLayerSerialization<'InstanceNormalization', InstanceNormalizationLayerConfig>;
+
 
 export type NormalizationLayerSerialization =
-    BatchNormalizationLayerSerialization;
+  BatchNormalizationLayerSerialization | InstanceNormalizationLayerSerialization;
+
 
 export type NormalizationLayerClassName =
-    NormalizationLayerSerialization['class_name'];
+  NormalizationLayerSerialization['class_name'];
 
 // We can't easily extract a string[] from the string union type, but we can
 // recapitulate the list, enforcing at compile time that the values are valid.
@@ -49,5 +59,5 @@ export type NormalizationLayerClassName =
  * type.
  */
 export const normalizationLayerClassNames: NormalizationLayerClassName[] = [
-  'BatchNormalization',
+  'BatchNormalization', 'InstanceNormalization'
 ];
