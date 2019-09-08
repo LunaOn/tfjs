@@ -41,9 +41,17 @@ export interface InstanceNormalizationLayerConfig extends LayerConfig {
 export type InstanceNormalizationLayerSerialization =
   BaseLayerSerialization<'InstanceNormalization', InstanceNormalizationLayerConfig>;
 
+//ConditionalInstanceNormalization
+export interface ConditionalInstanceNormalizationLayerConfig extends LayerConfig {
+  activation?: string;
+}
 
+export type ConditionalInstanceNormalizationLayerSerialization =
+  BaseLayerSerialization<'ConditionalInstanceNormalization', ConditionalInstanceNormalizationLayerConfig>;
+
+//NormalizationLayerSerialization
 export type NormalizationLayerSerialization =
-  BatchNormalizationLayerSerialization | InstanceNormalizationLayerSerialization;
+  BatchNormalizationLayerSerialization | InstanceNormalizationLayerSerialization | ConditionalInstanceNormalizationLayerSerialization;
 
 
 export type NormalizationLayerClassName =
@@ -59,5 +67,5 @@ export type NormalizationLayerClassName =
  * type.
  */
 export const normalizationLayerClassNames: NormalizationLayerClassName[] = [
-  'BatchNormalization', 'InstanceNormalization'
+  'BatchNormalization', 'InstanceNormalization', 'ConditionalInstanceNormalization'
 ];

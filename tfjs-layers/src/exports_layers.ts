@@ -22,6 +22,7 @@ import { BatchNormalization, BatchNormalizationLayerArgs } from './layers/normal
 import { ZeroPadding2D, ZeroPadding2DLayerArgs } from './layers/padding';
 import { ReflectionPadding2D, ReflectionPadding2DLayerArgs } from './layers/reflectionpadding';
 import { InstanceNormalization, InstanceNormalizationLayerArgs } from './layers/instancenormalization';
+import { ConditionalInstanceNormalization, ConditionalInstanceNormalizationLayerArgs } from './layers/conditionalinstancenormalization';
 import { DeprocessStylizedImage, DeprocessStylizedImageLayerArgs } from './layers/deprocess';
 import { AveragePooling1D, AveragePooling2D, AveragePooling3D, GlobalAveragePooling1D, GlobalAveragePooling2D, GlobalMaxPooling1D, GlobalMaxPooling2D, GlobalPooling2DLayerArgs, MaxPooling1D, MaxPooling2D, MaxPooling3D, Pooling1DLayerArgs, Pooling2DLayerArgs, Pooling3DLayerArgs } from './layers/pooling';
 import { GRU, GRUCell, GRUCellLayerArgs, GRULayerArgs, LSTM, LSTMCell, LSTMCellLayerArgs, LSTMLayerArgs, RNN, RNNCell, RNNLayerArgs, SimpleRNN, SimpleRNNCell, SimpleRNNCellLayerArgs, SimpleRNNLayerArgs, StackedRNNCells, StackedRNNCellsArgs } from './layers/recurrent';
@@ -868,6 +869,10 @@ export function reflectionPadding2d(args?: ReflectionPadding2DLayerArgs): Layer 
 
 export function instanceNormalization(args?: InstanceNormalizationLayerArgs): Layer {
   return new InstanceNormalization(args);
+}
+
+export function conditionalInstanceNormalization(args?: ConditionalInstanceNormalizationLayerArgs): Layer {
+  return new ConditionalInstanceNormalization(args);
 }
 
 export function deprocessStylizedImage(args?: DeprocessStylizedImageLayerArgs): Layer {
