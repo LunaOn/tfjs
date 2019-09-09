@@ -68,8 +68,29 @@ export function reflection2dPadding(
   x: Tensor, padding?: [[number, number], [number, number]],
   dim_ordering?: DataFormat): Tensor {
   return tidy(() => {
-    let pattern: Array<[number, number]> = [[0, 0], padding[0], padding[1], [0, 0]];
-    return tfc.pad(x, pattern);
+    let xArray: any = x.arraySync()
+    const num = padding[0][0]
+
+    for (let i = 0; i < xArray[0].length; i++) {
+      const item = xArray[0][i]
+      const originArr = item.concat([])
+      const len = originArr.length
+
+      for (let j = 0; j < num; j++) {
+        item.push(originArr[len - (j + 1)])
+        item.unshift(originArr[0 + j])
+      }
+    }
+
+    const originArr = xArray[0].concat([])
+    const len = originArr.length
+
+    for (let j = 0; j < num; j++) {
+      xArray[0].push(originArr[len - (j + 1)])
+      xArray[0].unshift(originArr[0 + j])
+    }
+
+    return tfc.tensor4d(xArray)
   });
 }
 
