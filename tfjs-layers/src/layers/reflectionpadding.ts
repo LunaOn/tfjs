@@ -67,31 +67,44 @@ export function temporalPadding(x: Tensor, padding?: [number, number]): Tensor {
 export function reflection2dPadding(
   x: Tensor, padding?: [[number, number], [number, number]],
   dim_ordering?: DataFormat): Tensor {
-  return tidy(() => {
-    let xArray: any = x.arraySync()
-    const num = padding[0][0]
+  const paddingNum = padding[0][0]
+  const width = x.shape[1]
+  // 右边的切片index
+  let rightIndex = []
+  for (let i = 1; i <= paddingNum; i++) {
+    rightIndex.push(width - i)
+  }
+  // 左边和上边的切片index
+  let leftTopIndex = []
+  for (let i = paddingNum - 1; i >= 0; i--) {
+    leftTopIndex.push(i)
+  }
 
-    for (let i = 0; i < xArray[0].length; i++) {
-      const item = xArray[0][i]
-      const originArr = item.concat([])
-      const len = originArr.length
+  // 右侧
+  let indices = tfc.tensor1d(rightIndex, 'int32')
+  let b = x.gather(indices, 2)  // 切片
+  let result = tfc.concat([x, b], 2) // 连接
 
-      for (let j = 0; j < num; j++) {
-        item.push(originArr[len - (j + 1)])
-        item.unshift(originArr[0 + j])
-      }
-    }
+  // 左侧
+  indices = tfc.tensor1d(leftTopIndex, 'int32')
+  b = x.gather(indices, 2)  // 切片
+  result = tfc.concat([b, result], 2) // 连接
 
-    const originArr = xArray[0].concat([])
-    const len = originArr.length
+  // 上边
+  indices = tfc.tensor1d(leftTopIndex, 'int32')
+  b = result.gather(indices, 1)  // 切片
+  result = tfc.concat([b, result], 1) // 连接
 
-    for (let j = 0; j < num; j++) {
-      xArray[0].push(originArr[len - (j + 1)])
-      xArray[0].unshift(originArr[0 + j])
-    }
+  // 下边
+  let bottomIndex = []
+  for (let i = 1; i <= paddingNum; i++) {
+    bottomIndex.push(width + paddingNum - i)
+  }
+  indices = tfc.tensor1d(bottomIndex, 'int32')
+  b = result.gather(indices, 1)  // 切片
+  result = tfc.concat([result, b], 1) // 连接
 
-    return tfc.tensor4d(xArray)
-  });
+  return result
 }
 
 export declare interface ReflectionPadding2DLayerArgs extends LayerArgs {
