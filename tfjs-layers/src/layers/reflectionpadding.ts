@@ -68,7 +68,8 @@ export function reflection2dPadding(
   x: Tensor, padding?: [[number, number], [number, number]],
   dim_ordering?: DataFormat): Tensor {
   const paddingNum = padding[0][0]
-  const width = x.shape[1]
+  const width = x.shape[2]
+  const height = x.shape[1]
   // 右边的切片index
   let rightIndex = []
   for (let i = 1; i <= paddingNum; i++) {
@@ -98,7 +99,7 @@ export function reflection2dPadding(
   // 下边
   let bottomIndex = []
   for (let i = 1; i <= paddingNum; i++) {
-    bottomIndex.push(width + paddingNum - i)
+    bottomIndex.push(height + paddingNum - i)
   }
   indices = tfc.tensor1d(bottomIndex, 'int32')
   b = result.gather(indices, 1)  // 切片
